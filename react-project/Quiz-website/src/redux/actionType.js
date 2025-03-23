@@ -1,0 +1,9 @@
+export const Change_category = "Change_category";
+export const Change_difficulty = "Change_difficulty";
+export const Change_type = "Change_type";
+export const Change_amount = "Change_amount";
+export const Change_username = "Change_username";
+export const Change_email = "Change_email";
+export const Change_password = "Change_password";     
+export const Change_score = "Change_score";
+export const RESET_ALL = "RESET_ALL"; 
