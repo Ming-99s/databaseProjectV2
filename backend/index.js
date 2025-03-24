@@ -1,13 +1,16 @@
 import express from 'express';
-import mysql from 'mysql2';
+import mysql from 'mysql';
 import cors from 'cors';
 const app = express();
 
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "1234",
+  password: "Rithyreach@6780",
   database: "quiz_app",
+  authPlugins: {
+    mysql_native_password: () => require('mysql2/auth/mysql_native_password')
+  }
 });
 
 app.use(express.json());
