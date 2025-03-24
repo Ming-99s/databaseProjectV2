@@ -8,6 +8,9 @@ const db = mysql.createConnection({
   user: "root",
   password: "1234",
   database: "quiz_app",
+  authPlugins: {
+    mysql_native_password: () => require('mysql2/auth/mysql_native_password')
+  }
 });
 
 app.use(express.json());
