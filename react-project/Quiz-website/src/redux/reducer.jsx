@@ -34,10 +34,9 @@ const reducer = (state = initialState, action) => {
                 Question_type: action.payload
             };
         case Change_score:
-            // Assuming the payload carries the score change (e.g., 1 for correct, -1 for wrong)
             return {
                 ...state,
-                score: state.score + action.payload
+                score: state.score + 1
             };
         case Change_username:
             return {
