@@ -1,3 +1,4 @@
+drop database quiz_app;
 create DATABASE quiz_app;
 USE quiz_app;
 
@@ -61,13 +62,14 @@ VALUES
 ('multiple', 'hard', 9, 'Which country has the most islands?', 'Sweden', JSON_ARRAY('Finland', 'Norway', 'Indonesia')),
 ('boolean', 'medium', 9, 'Is Africa the largest continent by population?', 'True', JSON_ARRAY('False')),
 
+
 -- Entertainment: Books
 ('multiple', 'easy', 10, 'Who wrote "To Kill a Mockingbird"?', 'Harper Lee', JSON_ARRAY('J.K. Rowling', 'Jane Austen', 'George Orwell')),
 ('boolean', 'medium', 10, 'Is "The Great Gatsby" written by F. Scott Fitzgerald?', 'True', JSON_ARRAY('False')),
 ('multiple', 'hard', 10, 'Who is the author of the "Lord of the Rings" series?', 'J.R.R. Tolkien', JSON_ARRAY('George R.R. Martin', 'C.S. Lewis', 'J.K. Rowling')),
 ('multiple', 'medium', 10, 'Which book series is about a young wizard attending Hogwarts School of Witchcraft and Wizardry?', 'Harry Potter', JSON_ARRAY('Percy Jackson', 'The Chronicles of Narnia', 'The Hunger Games')),
 ('boolean', 'easy', 10, 'Is "The Hobbit" a book by J.R.R. Tolkien?', 'True', JSON_ARRAY('False')),
-('multiple', 'hard', 10, 'Which novel begins with the line, "Call me Ishmael"?', 'Moby Dick', JSON_ARRAY('Pride and Prejudice', 'The Catcher in the Rye', '1984')),
+('multiple', 'hard', 10, 'Which ovel begins with the line, "Call me Ishmael"?', 'Moby Dick', JSON_ARRAY('Pride and Prejudice', 'The Catcher in the Rye', '1984')),
 ('boolean', 'medium', 10, 'Is the author of "1984" George Orwell?', 'True', JSON_ARRAY('False')),
 ('multiple', 'easy', 10, 'Who wrote "Pride and Prejudice"?', 'Jane Austen', JSON_ARRAY('Charlotte Brontë', 'Emily Dickinson', 'Virginia Woolf')),
 ('multiple', 'hard', 10, 'Which author wrote the book "Brave New World"?', 'Aldous Huxley', JSON_ARRAY('H.G. Wells', 'Ray Bradbury', 'Philip K. Dick')),
@@ -97,6 +99,7 @@ VALUES
 ('multiple', 'medium', 12, 'Which country is the host for the 2022 FIFA World Cup?', 'Qatar', JSON_ARRAY('Russia', 'Brazil', 'England')),
 ('multiple', 'easy', 12, 'In which sport is the term "hole-in-one" used?', 'Golf', JSON_ARRAY('Tennis', 'Basketball', 'Football')),
 
+
 -- History
 ('multiple', 'easy', 13, 'Who was the first man to walk on the moon?', 'Neil Armstrong', JSON_ARRAY('Yuri Gagarin', 'Buzz Aldrin', 'Michael Collins')),
 ('multiple', 'medium', 13, 'Who was the first president of the United States?', 'George Washington', JSON_ARRAY('Abraham Lincoln', 'Thomas Jefferson', 'John Adams')),
@@ -109,3 +112,65 @@ VALUES
 ('multiple', 'hard', 13, 'Who was the prime minister of the United Kingdom during World War II?', 'Winston Churchill', JSON_ARRAY('Neville Chamberlain', 'Clement Attlee', 'Edward Heath')),
 ('multiple', 'easy', 13, 'Who was the first emperor of the Roman Empire?', 'Augustus', JSON_ARRAY('Julius Caesar', 'Tiberius', 'Nero'));
 
+-- 1. View for question details with category names
+CREATE VIEW vw_question_details AS
+SELECT 
+    q.id,
+    q.question,
+    q.type,
+    q.difficulty,
+    c.name AS category_name,
+    q.correct_answer,
+    q.incorrect_answers
+FROM quiz_questions q
+JOIN categories c ON q.category_id = c.id;
+
+-- 2. View for questions count by category
+CREATE VIEW vw_category_statistics AS
+SELECT 
+    c.name AS category_name,
+    COUNT(q.id) AS total_questions,
+    SUM(CASE WHEN q.difficulty = 'easy' THEN 1 ELSE 0 END) AS easy_questions,
+    SUM(CASE WHEN q.difficulty = 'medium' THEN 1 ELSE 0 END) AS medium_questions,
+    SUM(CASE WHEN q.difficulty = 'hard' THEN 1 ELSE 0 END) AS hard_questions
+FROM categories c
+LEFT JOIN quiz_questions q ON c.id = q.category_id
+GROUP BY c.id, c.name;
+
+-- 3. View for question types distribution
+CREATE VIEW vw_question_types AS
+SELECT 
+    type,
+    difficulty,
+    COUNT(*) as question_count,
+    CONCAT(ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM quiz_questions), 2), '%') as percentage
+FROM quiz_questions
+GROUP BY type, difficulty
+ORDER BY type, difficulty;
+
+-- 4. View for admin dashboard
+CREATE VIEW vw_admin_dashboard AS
+SELECT 
+    (SELECT COUNT(*) FROM users) as total_users,
+    (SELECT COUNT(*) FROM quiz_questions) as total_questions,
+    (SELECT COUNT(*) FROM categories) as total_categories,
+    (SELECT COUNT(*) FROM users WHERE role = 'admin') as total_admins;
+
+-- 5. View for latest users
+CREATE VIEW vw_latest_users AS
+SELECT 
+    id,
+    username,
+    email,
+    role,
+    DATE_FORMAT(created_at, '%Y-%m-%d %H:%i:%s') as joined_date
+FROM users
+ORDER BY created_at DESC
+LIMIT 10;
+
+-- Test the views:
+SELECT * FROM vw_question_details;
+SELECT * FROM vw_category_statistics;
+SELECT * FROM vw_question_types;
+SELECT * FROM vw_admin_dashboard;
+SELECT * FROM vw_latest_users;
