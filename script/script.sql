@@ -112,6 +112,51 @@ VALUES
 ('multiple', 'hard', 13, 'Who was the prime minister of the United Kingdom during World War II?', 'Winston Churchill', JSON_ARRAY('Neville Chamberlain', 'Clement Attlee', 'Edward Heath')),
 ('multiple', 'easy', 13, 'Who was the first emperor of the Roman Empire?', 'Augustus', JSON_ARRAY('Julius Caesar', 'Tiberius', 'Nero'));
 
+
+-- Create a new user
+INSERT INTO users (username, email, password, role, created_at) VALUES 
+('john_doe', 'john@email.com', 'hashed_password', 'user', NOW());
+
+-- Bulk insert multiple users
+INSERT INTO users (username, email, password, role, created_at) VALUES 
+('alice123', 'alice@email.com', 'hashed_password', 'user', NOW()),
+('bob456', 'bob@email.com', 'hashed_password', 'user', NOW()),
+('admin1', 'admin@email.com', 'hashed_password', 'admin', NOW());
+
+-- Add single question
+INSERT INTO quiz_questions (type, difficulty, category_id, question, correct_answer, incorrect_answers) VALUES
+('multiple', 'medium', 9, 'What is the capital of France?', 'Paris', '["London", "Berlin", "Madrid"]');
+
+-- Add multiple questions
+INSERT INTO quiz_questions (type, difficulty, category_id, question, correct_answer, incorrect_answers) VALUES
+('multiple', 'easy', 10, 'Who wrote Harry Potter?', 'J.K. Rowling', '["Stephen King", "Dan Brown", "R.R. Martin"]'),
+('multiple', 'hard', 11, 'What is H2O?', 'Water', '["Air", "Gold", "Salt"]');
+
+-- Update specific fields of a question
+UPDATE quiz_questions 
+SET 
+    difficulty = 'hard',
+    question = 'Updated question text',
+    correct_answer = 'New correct answer'
+WHERE id = 1;
+
+-- Update question category
+UPDATE quiz_questions 
+SET category_id = 10 
+WHERE id = 5;
+
+-- Delete specific user
+DELETE FROM users 
+WHERE id = 123;
+
+-- Delete inactive users
+DELETE FROM users 
+WHERE last_login < DATE_SUB(NOW(), INTERVAL 1 YEAR);
+
+-- Delete all users except admins
+DELETE FROM users 
+WHERE role != 'admin';
+
 -- 1. View for question details with category names
 CREATE VIEW vw_question_details AS
 SELECT 
@@ -175,3 +220,34 @@ SELECT * FROM vw_question_types;
 SELECT * FROM vw_admin_dashboard;
 SELECT * FROM vw_latest_users;
 
+-- Example: Get random quiz questions based on difficulty
+DELIMITER //
+CREATE PROCEDURE GetQuizQuestions(
+    IN p_difficulty VARCHAR(10),
+    IN p_count INT
+)
+BEGIN
+    SELECT * FROM quiz_questions 
+    WHERE difficulty = p_difficulty 
+    ORDER BY RAND() 
+    LIMIT p_count;
+END //
+DELIMITER ;
+
+-- Usage in your quiz:
+CALL GetQuizQuestions('easy', 5);  -- Gets 5 random easy questions
+
+DELIMITER //
+CREATE FUNCTION CalculateScore(
+    correct_answers INT,
+    total_questions INT
+) 
+RETURNS DECIMAL(5,2)
+DETERMINISTIC
+BEGIN
+    RETURN (correct_answers / total_questions * 100);
+END //
+DELIMITER ;
+
+-- Usage in your quiz:
+SELECT CalculateScore(8, 10);  -- Returns 80.00 (percentage score)
