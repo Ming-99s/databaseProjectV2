@@ -174,3 +174,4 @@ SELECT * FROM vw_category_statistics;
 SELECT * FROM vw_question_types;
 SELECT * FROM vw_admin_dashboard;
 SELECT * FROM vw_latest_users;
+
