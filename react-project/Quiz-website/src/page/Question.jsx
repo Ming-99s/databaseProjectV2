@@ -125,23 +125,32 @@ function Question() {
       <Typography mt={5} variant="h6" textAlign='center' fontSize={25}>{response[indexQuestion].question}</Typography>
       
       {/* Grid2 container for two buttons per row */}
-      <Grid container spacing={2} mt={2}>
-      {options.map((option, index) => (
-      <Grid item xs={6} key={index}> {/* 6 columns for each button, i.e., two buttons per row */}
-        <Button
-          onClick={handleNextQ}
-          variant="contained"
-          sx={{
-            width: '100%', // Set the button width to 100% of the Grid item
-            py: 2,
-            backgroundColor: backgroundColorBox[index % backgroundColorBox.length] // Padding top and bottom
-          }}
-        >
-          {option}
-        </Button>
-      </Grid>
-      ))}
-      </Grid>
+      <Grid 
+  container 
+  spacing={2} 
+  mt={2} 
+  sx={{ 
+    display: "grid", 
+    gridTemplateColumns: "repeat(2, 1fr)", // Ensures two columns
+    gap: 2, // Adds spacing between items
+  }}
+>
+  {options.map((option, index) => (
+    <Button
+      key={index}
+      onClick={handleNextQ}
+      variant="contained"
+      sx={{
+        py: 2,
+        backgroundColor: backgroundColorBox[index % backgroundColorBox.length], // Cycling colors
+      }}
+    >
+      {option}
+    </Button>
+  ))}
+</Grid>
+
+
       
       <Box mt={4}>
         <Typography fontWeight='bold'>
