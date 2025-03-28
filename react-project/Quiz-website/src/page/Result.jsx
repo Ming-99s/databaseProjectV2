@@ -15,9 +15,9 @@ function Result() {
   }
   const {score} = useSelector(state => state)
   return (
-    <Box>
-      <Typography fontWeight='bold' variant="h2" mt={2}>Your Result Result</Typography>
-      <Typography fontWeight='bold' variant="h3">Score :{score}</Typography>
+    <Box textAlign='center' height='100vh' display='flex' flexDirection='column' justifyContent='center' alignItems='center'>
+      <Typography fontWeight='bold' variant="h2">Your Result Result</Typography>
+      <Typography fontWeight='bold' variant="h3" >Score :{score}</Typography>
       <Box mt={3}>
         <Button fullWidth variant='contained' onClick={handleClick}>
             Back to Quiz

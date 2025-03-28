@@ -1,8 +1,10 @@
 import { Typography, Box, FormControl, TextField, Button, RadioGroup, FormControlLabel, Radio, MenuItem, Select } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function CreateQuiz() {
+    const navigate = useNavigate();
     const [categories, setCategories] = useState([]);
     const [categoryId, setCategoryId] = useState('');
     const [question, setQuestion] = useState('');
@@ -10,6 +12,7 @@ function CreateQuiz() {
     const [type, setType] = useState('');
     const [correctAnswer, setCorrectAnswer] = useState('');
     const [incorrectAnswers, setIncorrectAnswers] = useState(["", "", ""]);
+    const [error, setError] = useState('');
 
     // Fetch categories from the backend
     useEffect(() => {
@@ -22,14 +25,24 @@ function CreateQuiz() {
             });
     }, []);
 
+    const handletoAdmin = () => {
+        navigate('/admin');
+    };
+
     const handleSubmit = async () => {
+        // Validation: Ensure that all required fields are filled
+        if (!categoryId || !question || !difficulty || !type || !correctAnswer) {
+            setError('Please fill all required fields');
+            return;
+        }
+
         const quizData = {
             type,
             difficulty,
             category_id: categoryId,  // Using category ID instead of category name
             question,
             correct_answer: correctAnswer,
-            incorrect_answers: type === "multiple" ? incorrectAnswers.filter(ans => ans.trim() !== '') : [] 
+            incorrect_answers: type === "multiple" ? incorrectAnswers.filter(ans => ans.trim() !== '') : []
         };
 
         try {
@@ -43,6 +56,7 @@ function CreateQuiz() {
             setType('');
             setCorrectAnswer('');
             setIncorrectAnswers(["", "", ""]);
+            setError(''); // Clear the error message after successful submission
         } catch (error) {
             console.error('Error adding quiz:', error);
             alert('Failed to add quiz.');
@@ -62,10 +76,10 @@ function CreateQuiz() {
 
     return (
         <>
-            <Typography variant='h3'>Add Quiz</Typography>
-            <Typography variant='h5'>Add Question</Typography>
+            <Typography variant='h3' fontWeight='bold' mt={3}>Add Quiz</Typography>
 
             <Box mt={2}>
+                <Typography variant='h6' mt={2}>Add Question</Typography>
                 <FormControl fullWidth>
                     <TextField
                         variant='outlined'
@@ -176,8 +190,18 @@ function CreateQuiz() {
                 ) : null}
             </Box>
 
+            {/* Error Message */}
+            {error && (
+                <Box mt={2}>
+                    <Typography variant="body1" color="red">{error}</Typography>
+                </Box>
+            )}
+
             <Box mt={3}>
-                <Button fullWidth variant='contained' type='submit' onClick={handleSubmit}>Submit</Button>
+                <Button fullWidth variant='contained' onClick={handleSubmit}>Submit</Button>
+            </Box>
+            <Box mt={3}>
+                <Button fullWidth variant='contained' onClick={handletoAdmin}>Back to Admin Dashboard</Button>
             </Box>
         </>
     );
