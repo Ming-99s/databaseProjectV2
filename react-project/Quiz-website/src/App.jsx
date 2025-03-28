@@ -13,15 +13,11 @@ function App() {
   return (
     <>
     <BrowserRouter>
-      <Container maxWidth= 'sm' >
-        <Box textAlign='center' width='100%'>
+      <Container>
+        <Box>
           <Routes>
           <Route path="/" element={<Home />} />
-          <Route path='/setting' element={
-            <>
-              <Typography variant='h2' fontWeight="bold">Quiz app</Typography>
-              <Setting></Setting>
-            </>}></Route>
+          <Route path='/setting' element={<Setting></Setting>}></Route>
             <Route path="/login" element={<Login />} />
             <Route path="/createquiz" element={<CreateQuiz />} />
             <Route path="/admin" element={<AdminDashboard />} />

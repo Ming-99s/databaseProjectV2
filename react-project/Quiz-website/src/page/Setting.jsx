@@ -23,6 +23,9 @@ function Setting() {
         navigate('/question');
     }
 
+    function handletoHome(){
+        navigate('/')
+    }
     const { response, loading, error } = useAxois({ url: "/categories" });
 
     console.log(response);
@@ -61,6 +64,7 @@ function Setting() {
     if (response) {
         return (
             <>
+                <Typography variant='h2' mt={3} fontWeight="bold">Quiz app</Typography>
                 <SelectBox label="Category" options={response} onChange={setCategory} />
                 <SelectBox label="Difficulty" options={DifficultyOp} onChange={setDifficulty} />
                 <SelectBox label="Type" options={Type} onChange={setType} />
@@ -68,6 +72,9 @@ function Setting() {
 
                 <Box mt={3}>
                     <Button fullWidth variant='contained' type='submit' onClick={handleClick}>Get Started</Button>
+                </Box>
+                <Box mt={3}>
+                    <Button fullWidth variant='contained' type='submit' onClick={handletoHome}>Back to Home Page</Button>
                 </Box>
             </>
         );

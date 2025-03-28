@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Typography, Box } from '@mui/material';
 import RegisterCom from '../components/RegisterCom';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate ,Link } from 'react-router-dom';
 import useAxiosPost from '../hook/useAxoisPost';
 
 function SignUp() {
@@ -36,13 +36,16 @@ function SignUp() {
 
   return (
     <>
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="h4" gutterBottom mt={3} fontWeight='bold'>
         Register
       </Typography>
       <RegisterCom label="Username" type="text" required />
       <RegisterCom label="Email" type="email" required />
       <RegisterCom label="Password" type="password" required />
 
+      <Typography variant="body1" color="error" mt={2}>
+        {message}
+      </Typography>
       <Box mt={3}>
         <Button
           variant="contained"
@@ -54,9 +57,12 @@ function SignUp() {
         </Button>
       </Box>
 
-      <Typography variant="body1" color="error" mt={2}>
-        {message}
-      </Typography>
+      <Box textAlign='right'>
+        <Link to="/login" style={{ color: "blue" }}>
+          <Typography mt={2}>Aready have an account?</Typography>
+
+        </Link>
+      </Box>
     </>
   );
 }

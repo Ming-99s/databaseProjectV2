@@ -1,4 +1,4 @@
-import { Box, Typography, Button, CircularProgress } from "@mui/material";
+import { Box, Typography, Button, CircularProgress, Grid } from "@mui/material";
 import useAxois from "../hook/useAxois";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
@@ -8,6 +8,12 @@ import { handleScoreChange } from "../redux/action";
 const getRandomInt = (max) => {
   return Math.floor(Math.random() * max); // Correcting the random logic
 };
+
+const backgroundColorBox =[
+  '#F04F40' , '#3C99D7' ,'#5CBF88' ,'#F9D82E'
+]
+
+
 
 function Question() {
   const navigator = useNavigate();
@@ -113,20 +119,37 @@ function Question() {
 
 
   return (
+
     <Box>
-      <Typography variant="h3">Question {indexQuestion + 1}</Typography>
-      <Typography mt={5}>{response[indexQuestion].question}</Typography>
+      <Typography variant="h3" mt={3} fontWeight='bold'>Question {indexQuestion + 1}</Typography>
+      <Typography mt={5} variant="h6" textAlign='center' fontSize={25}>{response[indexQuestion].question}</Typography>
+      
+      {/* Grid2 container for two buttons per row */}
+      <Grid container spacing={2} mt={2}>
       {options.map((option, index) => (
-        <Box mt={2} key={index}>
-          <Button onClick={handleNextQ} variant="contained">
-            {option} {/* Render the full option string */}
-          </Button>
-        </Box>
+      <Grid item xs={6} key={index}> {/* 6 columns for each button, i.e., two buttons per row */}
+        <Button
+          onClick={handleNextQ}
+          variant="contained"
+          sx={{
+            width: '100%', // Set the button width to 100% of the Grid item
+            py: 2,
+            backgroundColor: backgroundColorBox[index % backgroundColorBox.length] // Padding top and bottom
+          }}
+        >
+          {option}
+        </Button>
+      </Grid>
       ))}
+      </Grid>
+      
       <Box mt={4}>
-        Score: {score}/{response.length}
+        <Typography fontWeight='bold'>
+          Score: {score}/{response.length}
+        </Typography>
       </Box>
     </Box>
+    
   );
 }
 

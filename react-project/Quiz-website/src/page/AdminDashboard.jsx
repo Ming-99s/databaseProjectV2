@@ -4,8 +4,7 @@ import { useNavigate } from "react-router-dom";
 import useAxois from "../hook/useAxois";
 function AdminDashboard() {
   const navigate = useNavigate();
-  const urldata = "/users"; // URL to fetch user data
-  const { response, loading, error } = useAxois({ url: urldata }); // Custom hook for fetching data
+  const { response, loading, error } = useAxois({ url: '/users' }); // Custom hook for fetching data
   const [users, setUsers] = useState([]); // State to store fetched users
   const [show, setShow] = useState(false);
 
@@ -17,14 +16,21 @@ function AdminDashboard() {
     }
   };
 
+  function closeUser(){
+    setShow(false);
+  }
   // Navigate to the CreateQuiz page
   function handleCreateQuiz() {
     navigate("/createquiz");
   }
 
+  function handletoHomePage(){
+    navigate('/');
+  }
+
   return (
     <>
-      <Typography variant="h1">Admin Dashboard</Typography>
+      <Typography variant="h3" mt={3} mb={3} fontWeight='bold' textAlign="center">Admin Dashboard</Typography>
 
       <Box>
         <Button fullWidth variant="contained" onClick={handleCreateQuiz}>
@@ -32,10 +38,14 @@ function AdminDashboard() {
         </Button>
       </Box>
 
-      {/* Show All Users Button */}
       <Box mt={3}>
         <Button fullWidth variant="contained" onClick={handleShowAllUsers}>
           Show All Users
+        </Button>
+      </Box>
+      <Box mt={3}>
+        <Button fullWidth variant="contained" onClick={handletoHomePage}>
+          Back to Home Page
         </Button>
       </Box>
 
@@ -55,7 +65,13 @@ function AdminDashboard() {
               No users found.
             </Typography>
           )}
+          <Box mt={3} mb={3}>
+            <Button onClick={closeUser} variant="contained" fullWidth>
+              Close
+            </Button>
+          </Box>
         </Box>
+        
       )}
     </>
   );
