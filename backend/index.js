@@ -6,7 +6,7 @@ const app = express();
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "1234",
+  password: "Lyming@08",
   database: "quiz_app",
   authPlugins: {
     mysql_native_password: () => require('mysql2/auth/mysql_native_password')
